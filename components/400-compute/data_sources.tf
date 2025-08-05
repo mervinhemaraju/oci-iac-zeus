@@ -17,11 +17,11 @@ data "oci_core_vcns" "runners" {
 data "oci_core_subnets" "public_runners" {
   compartment_id = local.values.compartments.production
   display_name   = "public-runners"
-  vcn_id         = data.oci_core_vcns.mgmt.virtual_networks[0].id
+  vcn_id         = data.oci_core_vcns.runners.virtual_networks[0].id
 }
 
 data "oci_core_subnets" "private_mgmt" {
   compartment_id = local.values.compartments.production
   display_name   = "private-mgmt"
-  vcn_id         = data.oci_core_vcns.mgmt.virtual_networks[0].id
+  vcn_id         = data.oci_core_vcns.runners.virtual_networks[0].id
 }

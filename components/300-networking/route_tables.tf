@@ -41,3 +41,14 @@ resource "oci_core_route_table" "private_mgmt" {
 
   freeform_tags = local.tags.defaults
 }
+
+# Route Table Attachments
+resource "oci_core_route_table_attachment" "public_runners" {
+  subnet_id      = oci_core_subnet.public_runners.id
+  route_table_id = oci_core_route_table.public_runners.id
+}
+
+resource "oci_core_route_table_attachment" "private_mgmt" {
+  subnet_id      = oci_core_subnet.private_mgmt.id
+  route_table_id = oci_core_route_table.private_mgmt.id
+}
