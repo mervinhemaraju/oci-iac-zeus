@@ -26,7 +26,7 @@ locals {
         runners = "10.17.0.0/16"
       }
       subnets = {
-        private_mgmt   = "10.15.10.0/24"
+        private_mgmt   = "10.17.10.0/24"
         public_runners = "10.17.20.0/24"
       }
     }
