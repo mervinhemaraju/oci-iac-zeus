@@ -5,6 +5,15 @@ resource "oci_core_security_list" "public_runners" {
 
   display_name = "public-runners-sl"
 
+  ingress_security_rules {
+
+    source      = local.networking.cidr.vcn.runners
+    source_type = "CIDR_BLOCK"
+    protocol    = "all"
+
+    description = "Allow all traffic for the runners vcn's cidr block."
+  }
+
   egress_security_rules {
 
     destination      = "0.0.0.0/0"
