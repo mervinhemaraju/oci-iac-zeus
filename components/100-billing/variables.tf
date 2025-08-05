@@ -1,7 +1,7 @@
 variable "region" {
   type        = string
   description = "The region where the resources will be created."
-  default     = "uk-london-1"
+  default     = "af-johannesburg-1"
 }
 
 variable "token_doppler_global" {
