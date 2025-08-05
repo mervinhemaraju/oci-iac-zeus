@@ -1,14 +1,14 @@
-# Create a virtual cloud network for Mgmt
-resource "oci_core_vcn" "mgmt" {
+# Create a virtual cloud network for Runners
+resource "oci_core_vcn" "runners" {
 
   compartment_id = local.values.compartments.production
 
   cidr_blocks = [
-    local.networking.cidr.vcn.mgmt
+    local.networking.cidr.vcn.runners
   ]
 
-  display_name   = "mgmt"
-  dns_label      = "mgmt"
+  display_name   = "runners"
+  dns_label      = "runners"
   is_ipv6enabled = false
 
   freeform_tags = local.tags.defaults
