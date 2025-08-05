@@ -20,6 +20,9 @@ locals {
   }
 
   networking = {
+    ip_address = {
+      github_runner = "10.17.20.10"
+    }
 
     cidr = {
       vcn = {
