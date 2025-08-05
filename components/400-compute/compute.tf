@@ -44,6 +44,6 @@ resource "oci_core_instance" "github_runner" {
   freeform_tags = local.tags.defaults
 
   metadata = {
-    ssh_authorized_keys = data.oci_creds.prod_main.map.OCI_COMPUTE_KEY_PUBLIC
+    ssh_authorized_keys = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
   }
 }
