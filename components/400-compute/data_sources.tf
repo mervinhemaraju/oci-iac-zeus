@@ -1,6 +1,11 @@
-# Define our data source to fetch secrets
+# Define our data source to fetch secrets from oci repo
 data "doppler_secrets" "oci_creds" {
   project = "cloud-oci-creds"
+}
+
+# Define our data source to fetch secrets from apps repo
+data "doppler_secrets" "apps_creds" {
+  project = "apps-creds"
 }
 
 # Gets the availability domain from OCI

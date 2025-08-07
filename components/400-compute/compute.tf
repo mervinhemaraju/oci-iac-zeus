@@ -45,5 +45,14 @@ resource "oci_core_instance" "github_runner" {
 
   metadata = {
     ssh_authorized_keys = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
+
+    # User data from YAML template file
+    user_data = base64encode(templatefile("${path.module}/templates/cloud_init.yml", {
+      github_org_url      = "https://github.com/plagueworks-org"
+      github_runner_token = data.doppler_secrets.apps_creds.map.GH_ORG_PLAGUEWORKS_RUNNER_TOKEN
+      runner_name         = "github-runner-${formatdate("YYYYMMDD", timestamp())}"
+      runner_labels       = "self-hosted,Linux,X64,oci"
+      runner_work_dir     = "_work"
+    }))
   }
 }
