@@ -53,6 +53,7 @@ resource "oci_core_instance" "github_runner" {
       runner_name         = "github-runner-${formatdate("YYYYMMDD", timestamp())}"
       runner_labels       = "self-hosted,Linux,X64,oci"
       runner_work_dir     = "_work"
+      authorized_ssh_key  = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
     }))
   }
 }
