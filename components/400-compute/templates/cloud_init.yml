@@ -51,7 +51,6 @@ write_files:
       # Configuration
       GITHUB_ORG="plagueworks-org"
       GITHUB_PAT="${github_pat}"
-      RUNNER_VERSION="2.327.1"
 
       # Get runner registration token from GitHub API
       RUNNER_TOKEN=$(curl -s -X POST \
@@ -65,10 +64,10 @@ write_files:
       cd /home/githubrunner/actions-runner
 
       # Download the latest runner package
-      curl -o actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz -L https://objectstorage.af-johannesburg-1.oraclecloud.com/n/axvq8o9auqqf/b/binaries/o/github%2Factions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz
+      curl -o actions-runner-linux-arm64.tar.gz -L https://objectstorage.af-johannesburg-1.oraclecloud.com/n/axvq8o9auqqf/b/binaries/o/github%2Factions-runner-linux-arm64-2.327.1.tar.gz
 
       # Extract the package
-      tar xzf ./actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz
+      tar xzf ./actions-runner-linux-arm64.tar.gz
 
       # Configure the runner (non-interactive)
       ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace
