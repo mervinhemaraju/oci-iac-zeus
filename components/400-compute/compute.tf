@@ -57,3 +57,15 @@ resource "oci_core_instance" "github_runner" {
     }))
   }
 }
+
+output "cloud_init_raw" {
+  description = "Raw cloud-init configuration (before base64 encoding)"
+  value = templatefile("${path.module}/templates/cloud_init.yml", {
+    github_org_url      = "https://github.com/plagueworks-org"
+    github_runner_token = data.doppler_secrets.apps_creds.map.GH_ORG_PLAGUEWORKS_RUNNER_TOKEN
+    runner_name         = "github-runner-${formatdate("YYYYMMDD", timestamp())}"
+    runner_labels       = "self-hosted,Linux,X64,oci"
+    runner_work_dir     = "_work"
+    authorized_ssh_key  = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
+  })
+}

@@ -8,7 +8,7 @@ users:
     homedir: /home/opc
     sudo: "ALL=(ALL) NOPASSWD:ALL"
     ssh_authorized_keys:
-      - "$authorized_ssh_key"
+      - "${authorized_ssh_key}"
 
   - name: th3pl4gu3
     groups: sudo
@@ -16,7 +16,7 @@ users:
     homedir: /home/th3pl4gu3
     sudo: "ALL=(ALL) NOPASSWD:ALL"
     ssh_authorized_keys:
-      - "$authorized_ssh_key"
+      - "${authorized_ssh_key}"
 
   - name: githubrunner
     groups: sudo
@@ -24,7 +24,7 @@ users:
     homedir: /home/githubrunner
     sudo: "ALL=(ALL) NOPASSWD:ALL"
     ssh_authorized_keys:
-      - "$authorized_ssh_key"
+      - "${authorized_ssh_key}"
 
 packages:
   - curl
