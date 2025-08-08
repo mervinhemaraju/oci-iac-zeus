@@ -38,7 +38,7 @@ packages:
 write_files:
   - path: /etc/environment
     content: |
-      GITHUB_PAT=${github_pat_token}
+      GITHUB_PAT=${github_pat}
       GITHUB_ORG=plagueworks-org
     append: true
     permissions: "0644"
@@ -50,7 +50,7 @@ write_files:
 
       # Configuration
       GITHUB_ORG="plagueworks-org"
-      GITHUB_PAT="${github_pat_token}"
+      GITHUB_PAT="${github_pat}"
       RUNNER_VERSION="2.327.1"
 
       # Get runner registration token from GitHub API
@@ -90,7 +90,7 @@ write_files:
       ExecStart=/home/githubrunner/actions-runner/run.sh
       Restart=always
       RestartSec=5
-      Environment="GITHUB_PAT=${github_pat_token}"
+      Environment="GITHUB_PAT=${github_pat}"
       Environment="GITHUB_ORG=plagueworks-org"
 
       [Install]
