@@ -30,9 +30,10 @@ packages:
   - curl
   - wget
   - jq
-  - libicu-dev
-  - libssl-dev
+  - libicu
+  - openssl-devel
   - git
+  - tar
 
 write_files:
   - path: /opt/setup-github-runner.sh
