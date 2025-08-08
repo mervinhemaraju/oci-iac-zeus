@@ -11,7 +11,7 @@ data "doppler_secrets" "apps_creds" {
 # Gets the availability domain from OCI
 data "oci_identity_availability_domain" "this" {
   compartment_id = local.values.compartments.production
-  ad_number      = 2
+  ad_number      = 1
 }
 
 data "oci_core_vcns" "runners" {
