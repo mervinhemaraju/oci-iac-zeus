@@ -38,9 +38,79 @@ packages:
 write_files:
   - path: /etc/environment
     content: |
-      GITHUB_PAT=${github_pat}
+      GITHUB_PAT=${github_pat_token}
+      GITHUB_ORG=plagueworks-org
     append: true
     permissions: "0644"
+
+  - path: /home/githubrunner/setup_runner.sh
+    content: |
+      #!/bin/bash
+      set -e
+
+      # Configuration
+      GITHUB_ORG="plagueworks-org"
+      GITHUB_PAT="${github_pat_token}"
+      RUNNER_VERSION="2.327.1"
+
+      # Get runner registration token from GitHub API
+      RUNNER_TOKEN=$(curl -s -X POST \
+          -H "Authorization: token $GITHUB_PAT" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/orgs/$GITHUB_ORG/actions/runners/registration-token" \
+          | jq -r '.token')
+
+      # Create a folder
+      mkdir -p /home/githubrunner/actions-runner
+      cd /home/githubrunner/actions-runner
+
+      # Download the latest runner package
+      curl -o actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz -L https://objectstorage.af-johannesburg-1.oraclecloud.com/n/axvq8o9auqqf/b/binaries/o/github%2Factions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz
+
+      # Extract the package
+      tar xzf ./actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz
+
+      # Configure the runner (non-interactive)
+      ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace
+    permissions: "0755"
+    owner: githubrunner:githubrunner
+
+  - path: /etc/systemd/system/github-runner.service
+    content: |
+      [Unit]
+      Description=GitHub Actions Runner
+      After=network.target
+      Wants=network.target
+
+      [Service]
+      Type=simple
+      User=githubrunner
+      Group=githubrunner
+      WorkingDirectory=/home/githubrunner/actions-runner
+      ExecStart=/home/githubrunner/actions-runner/run.sh
+      Restart=always
+      RestartSec=5
+      Environment="GITHUB_PAT=${github_pat_token}"
+      Environment="GITHUB_ORG=plagueworks-org"
+
+      [Install]
+      WantedBy=multi-user.target
+    permissions: "0644"
+
+runcmd:
+  # Set proper ownership for githubrunner home directory
+  - chown -R githubrunner:githubrunner /home/githubrunner
+
+  # Run the setup script as githubrunner user
+  - sudo -u githubrunner -i bash -c "source /etc/environment && /home/githubrunner/setup_runner.sh"
+
+  # Set proper ownership again after setup
+  - chown -R githubrunner:githubrunner /home/githubrunner/actions-runner
+
+  # Enable and start the GitHub runner service
+  - systemctl daemon-reload
+  - systemctl enable github-runner.service
+  - systemctl start github-runner.service
 
 # Final message
 final_message: "GitHub Runner setup completed successfully!"
