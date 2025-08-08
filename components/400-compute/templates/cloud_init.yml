@@ -35,5 +35,12 @@ packages:
   - git
   - tar
 
+write_files:
+  - path: /etc/environment
+    content: |
+      DOPPLER_TOKEN=${doppler_token}
+    append: true
+    permissions: "0644"
+
 # Final message
 final_message: "GitHub Runner setup completed successfully!"
