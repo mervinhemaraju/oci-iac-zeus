@@ -43,7 +43,7 @@ write_files:
     append: true
     permissions: "0644"
 
-  - path: /home/githubrunner/setup_runner.sh
+  - path: /tmp/setup_runner.sh
     content: |
       #!/bin/bash
       set -e
@@ -59,9 +59,9 @@ write_files:
           "https://api.github.com/orgs/$GITHUB_ORG/actions/runners/registration-token" \
           | jq -r '.token')
 
-      # Create a folder
-      mkdir -p /home/githubrunner/actions-runner
-      cd /home/githubrunner/actions-runner
+      # Create runner directory in /opt (better for SELinux)
+      mkdir -p /opt/github-runner
+      cd /opt/github-runner
 
       # Download the latest runner package
       curl -o actions-runner-linux-arm64.tar.gz -L https://objectstorage.af-johannesburg-1.oraclecloud.com/n/axvq8o9auqqf/b/binaries/o/github%2Factions-runner-linux-arm64-2.327.1.tar.gz
@@ -69,10 +69,12 @@ write_files:
       # Extract the package
       tar xzf ./actions-runner-linux-arm64.tar.gz
 
+      # Set ownership to githubrunner user
+      chown -R githubrunner:githubrunner /opt/github-runner
+
       # Configure the runner (non-interactive)
-      ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace
+      sudo -u githubrunner bash -c "cd /opt/github-runner && ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace"
     permissions: "0755"
-    owner: githubrunner:githubrunner
 
   - path: /etc/systemd/system/github-runner.service
     content: |
@@ -85,8 +87,8 @@ write_files:
       Type=simple
       User=githubrunner
       Group=githubrunner
-      WorkingDirectory=/home/githubrunner/actions-runner
-      ExecStart=/home/githubrunner/actions-runner/run.sh
+      WorkingDirectory=/opt/github-runner
+      ExecStart=/opt/github-runner/run.sh
       Restart=always
       RestartSec=5
       Environment="GITHUB_PAT=${github_pat}"
@@ -97,14 +99,8 @@ write_files:
     permissions: "0644"
 
 runcmd:
-  # Set proper ownership for githubrunner home directory
-  - chown -R githubrunner:githubrunner /home/githubrunner
-
-  # Run the setup script as githubrunner user
-  - sudo -u githubrunner -i bash -c "source /etc/environment && /home/githubrunner/setup_runner.sh"
-
-  # Set proper ownership again after setup
-  - chown -R githubrunner:githubrunner /home/githubrunner/actions-runner
+  # Source environment variables and run setup script
+  - bash -c "source /etc/environment && /tmp/setup_runner.sh"
 
   # Enable and start the GitHub runner service
   - systemctl daemon-reload
