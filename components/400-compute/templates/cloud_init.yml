@@ -38,7 +38,7 @@ packages:
 write_files:
   - path: /etc/environment
     content: |
-      DOPPLER_TOKEN=${doppler_token}
+      GITHUB_PAT=${github_pat}
     append: true
     permissions: "0644"
 

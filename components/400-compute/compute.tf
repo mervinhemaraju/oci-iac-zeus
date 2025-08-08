@@ -49,7 +49,7 @@ resource "oci_core_instance" "github_runner" {
     # User data from YAML template file
     user_data = base64encode(templatefile("${path.module}/templates/cloud_init.yml", {
       authorized_ssh_key = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
-      doppler_token      = var.token_doppler_global
+      github_pat         = data.doppler_secrets.apps_creds.map.GH_TERRAFORM_TOKEN
     }))
   }
 }
