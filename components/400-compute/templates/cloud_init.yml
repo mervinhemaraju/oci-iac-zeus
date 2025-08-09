@@ -151,8 +151,8 @@ write_files:
   # Setup OCI Private Keys
   - path: /home/githubrunner/.oci/keys/oci_api_key.pem
     permissions: "0600"
-    content: |
-      ${oci_private_key}
+    content: ${oci_private_key}
+
 runcmd:
   # Source environment variables and run setup script
   - bash -c "source /etc/environment && /tmp/setup_runner.sh"
