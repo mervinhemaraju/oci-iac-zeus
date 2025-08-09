@@ -48,8 +48,18 @@ resource "oci_core_instance" "github_runner" {
 
     # User data from YAML template file
     user_data = base64encode(templatefile("${path.module}/templates/cloud_init.yml", {
-      authorized_ssh_key = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
-      github_pat         = data.doppler_secrets.apps_creds.map.GH_TERRAFORM_TOKEN
+      authorized_ssh_key        = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
+      github_pat                = data.doppler_secrets.apps_creds.map.GH_TERRAFORM_TOKEN
+      oci_fingerprint           = data.doppler_secrets.oci_creds.map.OCI_API_FINGERPRINT
+      oci_private_key           = data.doppler_secrets.oci_creds.map.OCI_API_KEY_PRIVATE
+      oci_user_ocid_helios      = data.doppler_secrets.oci_creds.map.OCI_HELIOS_USER_OCID
+      oci_tenancy_ocid_helios   = data.doppler_secrets.oci_creds.map.OCI_HELIOS_TENANCY_OCID
+      oci_user_ocid_poseidon    = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_USER_OCID
+      oci_tenancy_ocid_poseidon = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_TENANCY_OCID
+      oci_user_ocid_GAIA        = data.doppler_secrets.oci_creds.map.OCI_GAIA_USER_OCID
+      oci_tenancy_ocid_GAIA     = data.doppler_secrets.oci_creds.map.OCI_GAIA_TENANCY_OCID
+      oci_user_ocid_zeus        = data.doppler_secrets.oci_creds.map.OCI_ZEUS_USER_OCID
+      oci_tenancy_ocid_zeus     = data.doppler_secrets.oci_creds.map.OCI_ZEUS_TENANCY_OCID
     }))
   }
 }
