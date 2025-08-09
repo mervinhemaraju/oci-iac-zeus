@@ -56,8 +56,8 @@ resource "oci_core_instance" "github_runner" {
       oci_tenancy_ocid_helios   = data.doppler_secrets.oci_creds.map.OCI_HELIOS_TENANCY_OCID
       oci_user_ocid_poseidon    = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_USER_OCID
       oci_tenancy_ocid_poseidon = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_TENANCY_OCID
-      oci_user_ocid_GAIA        = data.doppler_secrets.oci_creds.map.OCI_GAIA_USER_OCID
-      oci_tenancy_ocid_GAIA     = data.doppler_secrets.oci_creds.map.OCI_GAIA_TENANCY_OCID
+      oci_user_ocid_gaia        = data.doppler_secrets.oci_creds.map.OCI_GAIA_USER_OCID
+      oci_tenancy_ocid_gaia     = data.doppler_secrets.oci_creds.map.OCI_GAIA_TENANCY_OCID
       oci_user_ocid_zeus        = data.doppler_secrets.oci_creds.map.OCI_ZEUS_USER_OCID
       oci_tenancy_ocid_zeus     = data.doppler_secrets.oci_creds.map.OCI_ZEUS_TENANCY_OCID
     }))
