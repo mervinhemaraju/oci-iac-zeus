@@ -38,6 +38,7 @@ packages:
   - git
   - tar
   - python3-pip
+  - python39-oci-cli
 
 write_files:
   # Set up environment variables
@@ -115,6 +116,43 @@ write_files:
       alias pip=pip3
       export PATH=$PATH:/usr/local/bin
 
+  # Setup OCI CLI configuration
+  - path: /home/githubrunner/.oci/config
+    permissions: "0600"
+    content: |
+      [OCI-HELIOS]
+      user=${oci_user_ocid_helios}
+      fingerprint=${oci_fingerprint}
+      tenancy=${oci_tenancy_ocid_helios}
+      region=af-johannesburg-1
+      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+
+      [OCI-ZEUS]
+      user=${oci_user_ocid_zeus}
+      fingerprint=${oci_fingerprint}
+      tenancy=${oci_tenancy_ocid_zeus}
+      region=af-johannesburg-1
+      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+
+      [OCI-POSEIDON]
+      user=${oci_user_ocid_poseidon}
+      fingerprint=${oci_fingerprint}
+      tenancy=${oci_tenancy_ocid_poseidon}
+      region=uk-south-1
+      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+
+      [OCI-GAIA]
+      user=${oci_user_ocid_gaia}
+      fingerprint=${oci_fingerprint}
+      tenancy=${oci_tenancy_ocid_gaia}
+      region=uk-south-1
+      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+
+  # Setup OCI Private Keys
+  - path: /home/githubrunner/.oci/keys/oci_api_key.pem
+    permissions: "0600"
+    content: |
+      ${oci_private_key}
 runcmd:
   # Source environment variables and run setup script
   - bash -c "source /etc/environment && /tmp/setup_runner.sh"
