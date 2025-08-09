@@ -26,6 +26,9 @@ users:
     ssh_authorized_keys:
       - "${authorized_ssh_key}"
 
+package_update: true
+package_upgrade: true
+
 packages:
   - curl
   - wget
@@ -34,8 +37,10 @@ packages:
   - openssl-devel
   - git
   - tar
+  - python3-pip
 
 write_files:
+  # Set up environment variables
   - path: /etc/environment
     content: |
       GITHUB_PAT=${github_pat}
@@ -43,6 +48,7 @@ write_files:
     append: true
     permissions: "0644"
 
+  # Run the setup script to configure the GitHub runner
   - path: /tmp/setup_runner.sh
     content: |
       #!/bin/bash
@@ -76,6 +82,7 @@ write_files:
       sudo -u githubrunner bash -c "cd /opt/github-runner && ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace"
     permissions: "0755"
 
+  # Create systemd service for the GitHub runner
   - path: /etc/systemd/system/github-runner.service
     content: |
       [Unit]
@@ -97,6 +104,16 @@ write_files:
       [Install]
       WantedBy=multi-user.target
     permissions: "0644"
+
+  # Setup Python aliases
+  - path: /etc/profile.d/python-aliases.sh
+    permissions: "0644"
+    content: |
+      #!/bin/bash
+      # System-wide Python aliases
+      alias python=python3
+      alias pip=pip3
+      export PATH=$PATH:/usr/local/bin
 
 runcmd:
   # Source environment variables and run setup script
