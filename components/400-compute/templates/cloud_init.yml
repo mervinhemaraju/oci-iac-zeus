@@ -172,6 +172,10 @@ runcmd:
   - usermod -aG docker opc
   - usermod -aG docker th3pl4gu3
 
+  # Ensure githubrunner has full ownership of their home directory
+  - chown -R githubrunner:githubrunner /home/githubrunner
+  - chmod -R 755 /home/githubrunner
+
   # Source environment variables and run setup script
   - bash -c "source /etc/environment && /tmp/setup_runner.sh"
 
