@@ -19,7 +19,7 @@ users:
       - "${authorized_ssh_key}"
 
   - name: githubrunner
-    groups: sudo
+    groups: sudo,docker
     shell: /bin/bash
     homedir: /home/githubrunner
     sudo: "ALL=(ALL) NOPASSWD:ALL"
@@ -155,6 +155,17 @@ write_files:
     content: ${oci_private_key_base64}
 
 runcmd:
+  # Install Docker
+  - dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+  - dnf install docker-ce -y
+  - systemctl start docker
+  - systemctl enable docker
+
+  # Add githubrunner user to docker group (if not already done)
+  - usermod -aG docker githubrunner
+  - usermod -aG docker opc
+  - usermod -aG docker th3pl4gu3
+
   # Source environment variables and run setup script
   - bash -c "source /etc/environment && /tmp/setup_runner.sh"
 
