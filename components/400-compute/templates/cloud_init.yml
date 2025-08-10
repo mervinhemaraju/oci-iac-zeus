@@ -46,6 +46,12 @@ write_files:
     content: |
       GITHUB_PAT=${github_pat}
       GITHUB_ORG=plagueworks-org
+
+      OCI_ZEUS_PROD_CID=${oci_prod_cid_zeus}
+      OCI_POSEIDON_PROD_CID=${oci_prod_cid_poseidon}
+      OCI_GAIA_PROD_CID=${oci_prod_cid_gaia}
+      OCI_HELIOS_PROD_CID=${oci_prod_cid_helios}
+
     append: true
     permissions: "0644"
 
