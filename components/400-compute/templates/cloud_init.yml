@@ -46,12 +46,6 @@ write_files:
     content: |
       GITHUB_PAT=${github_pat}
       GITHUB_ORG=plagueworks-org
-
-      OCI_ZEUS_PROD_CID=${oci_prod_cid_zeus}
-      OCI_POSEIDON_PROD_CID=${oci_prod_cid_poseidon}
-      OCI_GAIA_PROD_CID=${oci_prod_cid_gaia}
-      OCI_HELIOS_PROD_CID=${oci_prod_cid_helios}
-
     append: true
     permissions: "0644"
 
@@ -131,34 +125,52 @@ write_files:
       fingerprint=${oci_fingerprint}
       tenancy=${oci_tenancy_ocid_helios}
       region=af-johannesburg-1
-      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+      key_file=/home/githubrunner/.oci/keys/oci_api_private_key.pem
 
       [OCI-ZEUS]
       user=${oci_user_ocid_zeus}
       fingerprint=${oci_fingerprint}
       tenancy=${oci_tenancy_ocid_zeus}
       region=af-johannesburg-1
-      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+      key_file=/home/githubrunner/.oci/keys/oci_api_private_key.pem
 
       [OCI-POSEIDON]
       user=${oci_user_ocid_poseidon}
       fingerprint=${oci_fingerprint}
       tenancy=${oci_tenancy_ocid_poseidon}
       region=uk-south-1
-      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+      key_file=/home/githubrunner/.oci/keys/oci_api_private_key.pem
 
       [OCI-GAIA]
       user=${oci_user_ocid_gaia}
       fingerprint=${oci_fingerprint}
       tenancy=${oci_tenancy_ocid_gaia}
       region=uk-south-1
-      key_file=/home/githubrunner/.oci/keys/oci_api_key.pem
+      key_file=/home/githubrunner/.oci/keys/oci_api_private_key.pem
 
-  # Setup OCI Private Keys
-  - path: /home/githubrunner/.oci/keys/oci_api_key.pem
+  # Setup OCI API Private Key
+  - path: /home/githubrunner/.oci/keys/oci_api_private_key.pem
     permissions: "0600"
     encoding: b64
-    content: ${oci_private_key_base64}
+    content: ${oci_api_private_key_base64}
+
+  # Setup OCI Compute Private Key
+  - path: /home/githubrunner/.oci/keys/oci_compute_private_key.pem
+    permissions: "0600"
+    encoding: b64
+    content: ${oci_compute_private_key_base64}
+
+  # Setup OCI API Public Key
+  - path: /home/githubrunner/.oci/keys/oci_api_public_key.pem
+    permissions: "0600"
+    encoding: b64
+    content: ${oci_api_public_key_base64}
+
+  # Setup OCI Compute Public Key
+  - path: /home/githubrunner/.oci/keys/oci_compute_public_key.pem
+    permissions: "0600"
+    encoding: b64
+    content: ${oci_compute_public_key_base64}
 
 runcmd:
   # Install Docker
