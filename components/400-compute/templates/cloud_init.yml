@@ -43,14 +43,15 @@ packages:
 write_files:
   # Set up environment variables
   - path: /etc/environment
+    permissions: "0644"
     content: |
       GITHUB_PAT=${github_pat}
       GITHUB_ORG=plagueworks-org
     append: true
-    permissions: "0644"
 
   # Run the setup script to configure the GitHub runner
   - path: /tmp/setup_runner.sh
+    permissions: "0755"
     content: |
       #!/bin/bash
       set -e
@@ -71,7 +72,7 @@ write_files:
       cd /opt/github-runner
 
       # Download the latest runner package
-      curl -o actions-runner-linux-arm64.tar.gz -L https://objectstorage.af-johannesburg-1.oraclecloud.com/n/axvq8o9auqqf/b/binaries/o/github%2Factions-runner-linux-arm64-2.327.1.tar.gz
+      curl -o actions-runner-linux-arm64.tar.gz -L https://github.com/actions/runner/releases/download/v2.327.1/actions-runner-linux-arm64-2.327.1.tar.gz
 
       # Extract the package
       tar xzf ./actions-runner-linux-arm64.tar.gz
@@ -81,10 +82,10 @@ write_files:
 
       # Configure the runner (non-interactive)
       sudo -u githubrunner bash -c "cd /opt/github-runner && ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace"
-    permissions: "0755"
 
   # Create systemd service for the GitHub runner
   - path: /etc/systemd/system/github-runner.service
+    permissions: "0644"
     content: |
       [Unit]
       Description=GitHub Actions Runner
@@ -104,7 +105,6 @@ write_files:
 
       [Install]
       WantedBy=multi-user.target
-    permissions: "0644"
 
   # Setup Python aliases
   - path: /etc/profile.d/python-aliases.sh
@@ -119,6 +119,7 @@ write_files:
   # Setup OCI CLI configuration
   - path: /home/githubrunner/.oci/config
     permissions: "0600"
+    owner: "githubrunner:githubrunner"
     content: |
       [OCI-HELIOS]
       user=${oci_user_ocid_helios}
@@ -151,24 +152,28 @@ write_files:
   # Setup OCI API Private Key
   - path: /home/githubrunner/.oci/keys/oci_api_private_key.pem
     permissions: "0600"
+    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_api_private_key_base64}
 
   # Setup OCI Compute Private Key
   - path: /home/githubrunner/.oci/keys/oci_compute_private_key.pem
     permissions: "0600"
+    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_compute_private_key_base64}
 
   # Setup OCI API Public Key
   - path: /home/githubrunner/.oci/keys/oci_api_public_key.pem
     permissions: "0600"
+    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_api_public_key_base64}
 
   # Setup OCI Compute Public Key
   - path: /home/githubrunner/.oci/keys/oci_compute_public_key.pem
     permissions: "0600"
+    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_compute_public_key_base64}
 
@@ -185,8 +190,8 @@ runcmd:
   - usermod -aG docker th3pl4gu3
 
   # Ensure githubrunner has full ownership of their home directory
-  - chown -R githubrunner:githubrunner /home/githubrunner
-  - chmod -R 755 /home/githubrunner
+  # - chown -R githubrunner:githubrunner /home/githubrunner
+  # - chmod -R 755 /home/githubrunner
 
   # Source environment variables and run setup script
   - bash -c "source /etc/environment && /tmp/setup_runner.sh"
