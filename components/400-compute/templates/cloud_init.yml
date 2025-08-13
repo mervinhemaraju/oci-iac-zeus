@@ -119,7 +119,6 @@ write_files:
   # Setup OCI CLI configuration
   - path: /home/githubrunner/.oci/config
     permissions: "0600"
-    owner: "githubrunner:githubrunner"
     content: |
       [OCI-HELIOS]
       user=${oci_user_ocid_helios}
@@ -152,28 +151,24 @@ write_files:
   # Setup OCI API Private Key
   - path: /home/githubrunner/.oci/keys/oci_api_private_key.pem
     permissions: "0600"
-    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_api_private_key_base64}
 
   # Setup OCI Compute Private Key
   - path: /home/githubrunner/.oci/keys/oci_compute_private_key.pem
     permissions: "0600"
-    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_compute_private_key_base64}
 
   # Setup OCI API Public Key
   - path: /home/githubrunner/.oci/keys/oci_api_public_key.pem
     permissions: "0600"
-    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_api_public_key_base64}
 
   # Setup OCI Compute Public Key
   - path: /home/githubrunner/.oci/keys/oci_compute_public_key.pem
     permissions: "0600"
-    owner: "githubrunner:githubrunner"
     encoding: b64
     content: ${oci_compute_public_key_base64}
 
@@ -190,7 +185,7 @@ runcmd:
   - usermod -aG docker th3pl4gu3
 
   # Ensure githubrunner has full ownership of their home directory
-  # - chown -R githubrunner:githubrunner /home/githubrunner
+  - chown -R githubrunner:githubrunner /home/githubrunner
   # - chmod -R 755 /home/githubrunner
 
   # Source environment variables and run setup script
