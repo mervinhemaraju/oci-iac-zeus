@@ -53,7 +53,7 @@ resource "oci_core_instance" "github_runner" {
 
       authorized_ssh_key   = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
       github_pat           = data.doppler_secrets.apps_creds.map.GH_TERRAFORM_TOKEN
-      cloudflare_api_token = data.doppler_secrets.apps_creds.map.CLOUDFLARE_API_TOKEN
+      cloudflare_api_token = data.doppler_secrets.apps_creds.map.CLOUDFLARE_TERRAFORM_TOKEN
       oci_fingerprint      = data.doppler_secrets.oci_creds.map.OCI_API_FINGERPRINT
 
       oci_api_private_key_base64     = base64encode(data.doppler_secrets.oci_creds.map.OCI_API_KEY_PRIVATE)
