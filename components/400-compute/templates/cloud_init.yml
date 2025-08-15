@@ -72,6 +72,24 @@ write_files:
       mkdir -p /opt/github-runner
       cd /opt/github-runner
 
+      # Get the latest release version and download URL
+      LATEST_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+      DOWNLOAD_URL="https://github.com/actions/runner/releases/download/$${LATEST_VERSION}/actions-runner-linux-arm64-$${LATEST_VERSION#v}.tar.gz"
+
+      echo "Downloading GitHub Actions Runner version: $LATEST_VERSION"
+
+      # Download the latest runner package
+      curl -o actions-runner-linux-arm64.tar.gz -L "$DOWNLOAD_URL"
+
+      # Extract the package
+      tar xzf ./actions-runner-linux-arm64.tar.gz
+
+      # Set ownership to githubrunner user
+      chown -R githubrunner:githubrunner /opt/github-runner
+
+      # Configure the runner (non-interactive)
+      sudo -u githubrunner bash -c "cd /opt/github-runner && ./config.sh --url https://github.com/plagueworks-org --token $RUNNER_TOKEN --unattended --replace"
+
   # Create systemd service for the GitHub runner
   - path: /etc/systemd/system/github-runner.service
     permissions: "0644"
