@@ -19,20 +19,15 @@ locals {
     }
   }
 
-  secrets = {
-    oci = "cloud-oci-creds"
-  }
-
   networking = {
 
     cidr = {
       vcn = {
-        prod = "10.17.0.0/16"
+        runners = "10.17.0.0/16"
       }
       subnets = {
-        private_mgmt    = "10.17.20.0/24"
-        private_k8      = "10.17.30.0/24"
-        private_db_gaia = "10.18.20.0/24" # (This is found in the GAIA account)
+        private_mgmt   = "10.17.10.0/24"
+        public_runners = "10.17.20.0/24"
       }
     }
   }

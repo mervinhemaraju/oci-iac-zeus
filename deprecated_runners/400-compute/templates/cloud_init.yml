@@ -40,6 +40,8 @@ packages:
   - tar
   - python3-pip
   - oci-utils
+  - postgresql
+  - mariadb
 
 write_files:
   # Set up environment variables
@@ -183,7 +185,33 @@ write_files:
   - path: /home/githubrunner/cloudflare/cloudflare.ini
     permissions: "0600"
     content: |
-      dns_cloudflare_api_token = ${cloudflare_api_token}
+      dns_cloudflare_api_token = ${cloudflare_api_token}  # Add database server mapping to hosts file
+  # Updated hosts file for db server mapping
+  - path: /etc/hosts
+    append: true
+    content: |
+      # Database server
+      ${gaia_db_server}    gaia-db.local gaia-db
+
+  # MariaDB client config for th3pl4gu3 user
+  - path: /home/th3pl4gu3/.my.cnf
+    permissions: "0600"
+    content: |
+      [client]
+      host=${gaia_db_server}
+      user=th3pl4gu3
+      password=${mariadb_root_password}
+
+      [mysql]
+      host=${gaia_db_server}
+      user=th3pl4gu3
+      password=${mariadb_root_password}
+
+  # PostgreSQL password file for th3pl4gu3
+  - path: /home/th3pl4gu3/.pgpass
+    permissions: "0600"
+    content: |
+      ${gaia_db_server}:5432:*:th3pl4gu3:${postgres_user_password}
 
 runcmd:
   # Disable the firewalld
@@ -192,6 +220,12 @@ runcmd:
 
   # Automatic growth of volume
   - /usr/libexec/oci-growfs -y
+
+  # Fix ownership of user files AFTER users are created
+  - chown th3pl4gu3:th3pl4gu3 /home/th3pl4gu3/.my.cnf
+  - chown th3pl4gu3:th3pl4gu3 /home/th3pl4gu3/.pgpass
+  - chmod 600 /home/th3pl4gu3/.my.cnf
+  - chmod 600 /home/th3pl4gu3/.pgpass
 
   # Install the EPEL 9 Repository
   - dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm

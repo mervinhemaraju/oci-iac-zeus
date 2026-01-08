@@ -12,7 +12,7 @@ terraform {
     # Doppler provider
     doppler = {
       source  = "DopplerHQ/doppler"
-      version = "~> 1"
+      version = "1.7.0"
     }
 
     # OCI provider

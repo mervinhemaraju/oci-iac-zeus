@@ -1,36 +1,7 @@
-resource "oci_core_security_list" "public_runners" {
-
-  compartment_id = local.values.compartments.production
-  vcn_id         = oci_core_vcn.runners.id
-
-  display_name = "public-runners-sl"
-
-  ingress_security_rules {
-
-    source      = local.networking.cidr.vcn.runners
-    source_type = "CIDR_BLOCK"
-    protocol    = "all"
-
-    description = "Allow all traffic for the runners vcn's cidr block."
-  }
-
-  egress_security_rules {
-
-    destination      = "0.0.0.0/0"
-    destination_type = "CIDR_BLOCK"
-    protocol         = "all"
-
-    description = "Allow all outbound traffic to the internet."
-
-  }
-
-  freeform_tags = local.tags.defaults
-}
-
 resource "oci_core_security_list" "private_mgmt" {
 
   compartment_id = local.values.compartments.production
-  vcn_id         = oci_core_vcn.runners.id
+  vcn_id         = oci_core_vcn.prod.id
 
   display_name = "private-mgmt-sl"
 
@@ -51,7 +22,7 @@ resource "oci_core_security_list" "private_mgmt" {
 
   egress_security_rules {
 
-    destination      = local.networking.cidr.vcn.runners
+    destination      = local.networking.cidr.vcn.prod
     destination_type = "CIDR_BLOCK"
     protocol         = "all"
 
@@ -61,3 +32,129 @@ resource "oci_core_security_list" "private_mgmt" {
 
   freeform_tags = local.tags.defaults
 }
+
+resource "oci_core_security_list" "private_k8" {
+
+  compartment_id = local.values.compartments.production
+  vcn_id         = oci_core_vcn.prod.id
+
+  display_name = "private-k8-sl"
+
+
+
+  # Alows all ingress traffic from the VCN CIDR
+  ingress_security_rules {
+
+    source      = local.networking.cidr.vcn.prod
+    source_type = "CIDR_BLOCK"
+    protocol    = "all"
+
+    description = "Allow all traffic from the VCN CIDR"
+  }
+
+
+  # Allows all ingress traffic from the private db GAIA subnet
+  ingress_security_rules {
+    source      = local.networking.cidr.subnets.private_db_gaia
+    source_type = "CIDR_BLOCK"
+    protocol    = "all"
+
+    description = "Allow all traffic from the private-db GAIA subnet."
+  }
+
+  # Allow all egress traffic to the internet
+  egress_security_rules {
+
+    destination      = "0.0.0.0/0"
+    destination_type = "CIDR_BLOCK"
+    protocol         = "all"
+
+    description = "Allow all outbound traffic to the internet."
+
+  }
+
+  freeform_tags = local.tags.defaults
+}
+
+# resource "oci_core_security_list" "public_k8" {
+
+#   compartment_id = local.values.compartments.production
+#   vcn_id         = oci_core_vcn.mgmt.id
+
+#   display_name = "public-k8-sl"
+
+#   ingress_security_rules {
+#     # Allows K8 traffic from the internet
+
+#     source      = "0.0.0.0/0"
+#     source_type = "CIDR_BLOCK"
+#     protocol    = 6 # TCP
+
+#     tcp_options {
+#       min = 6443
+#       max = 6443
+#     }
+#   }
+
+#   ingress_security_rules {
+#     # Allows HTTPS traffic from the internet
+
+#     source      = "0.0.0.0/0"
+#     source_type = "CIDR_BLOCK"
+#     protocol    = 6 # TCP
+
+#     tcp_options {
+#       min = 443
+#       max = 443
+#     }
+#   }
+
+#   ingress_security_rules {
+#     # Allows HTTP traffic from the internet
+
+#     source      = "0.0.0.0/0"
+#     source_type = "CIDR_BLOCK"
+#     protocol    = 6 # TCP
+
+#     tcp_options {
+#       min = 80
+#       max = 80
+#     }
+#   }
+
+#   ingress_security_rules {
+#     # Allows port 8080 traffic from the internet
+
+#     source      = "0.0.0.0/0"
+#     source_type = "CIDR_BLOCK"
+#     protocol    = 6 # TCP
+
+#     tcp_options {
+#       min = 8080
+#       max = 8080
+#     }
+#   }
+
+#   ingress_security_rules {
+
+#     # Alows all traffic from the VCN CIDR
+
+#     source      = local.networking.cidr.vcn.mgmt
+#     source_type = "CIDR_BLOCK"
+#     protocol    = "all"
+
+#     description = "Allow all traffic from the VCN CIDR"
+#   }
+
+#   egress_security_rules {
+
+#     destination      = "0.0.0.0/0"
+#     destination_type = "CIDR_BLOCK"
+#     protocol         = "all"
+
+#     description = "Allow all outbound traffic to the internet."
+
+#   }
+
+#   freeform_tags = local.tags.defaults
+# }
