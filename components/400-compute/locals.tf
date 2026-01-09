@@ -6,7 +6,7 @@ locals {
       "Creator"     = "mervin.hemaraju",
       "Owner"       = "mervin.hemaraju",
       "Terraform"   = "Yes",
-      "Project"     = "https://github.com/mervinhemaraju/oci-iac-poseidon",
+      "Project"     = "https://github.com/mervinhemaraju/oci-iac-zeus",
       "Environment" = "Production"
       "Component"   = "400-compute"
     }
@@ -15,7 +15,7 @@ locals {
   values = {
 
     compartments = {
-      production = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_COMPARTMENT_PRODUCTION_ID
+      production = data.doppler_secrets.oci_creds.map.OCI_ZEUS_COMPARTMENT_PRODUCTION_ID
     }
 
 
@@ -33,7 +33,7 @@ locals {
     compute = {
 
       shape          = "VM.Standard.A1.Flex"
-      image_oke_node = "ocid1.image.oc1.uk-london-1.aaaaaaaa656st3mmhvhimtpe3n6xehhqc3a24tmwm3vcuuquopcjino3nnxq"
+      image_oke_node = "ocid1.image.oc1.af-johannesburg-1.aaaaaaaa352v6q4zyrzuf7hwvzrlxkec7whapoddcnu7oz2gxrsuirv252ua"
 
       plugins_config = [
         {

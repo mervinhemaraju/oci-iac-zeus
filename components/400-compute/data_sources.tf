@@ -9,26 +9,26 @@ data "oci_identity_availability_domain" "this" {
   ad_number      = 1
 }
 
-data "oci_core_vcns" "mgmt" {
+data "oci_core_vcns" "prod" {
   compartment_id = local.values.compartments.production
 
-  display_name = "mgmt"
+  display_name = "prod"
 }
 
-data "oci_core_subnets" "public_k8" {
-  compartment_id = local.values.compartments.production
-  display_name   = "public-k8"
-  vcn_id         = data.oci_core_vcns.mgmt.virtual_networks[0].id
-}
+# data "oci_core_subnets" "public_k8" {
+#   compartment_id = local.values.compartments.production
+#   display_name   = "public-k8"
+#   vcn_id         = data.oci_core_vcns.prod.virtual_networks[0].id
+# }
 
 data "oci_core_subnets" "private_k8" {
   compartment_id = local.values.compartments.production
   display_name   = "private-k8"
-  vcn_id         = data.oci_core_vcns.mgmt.virtual_networks[0].id
+  vcn_id         = data.oci_core_vcns.prod.virtual_networks[0].id
 }
 
 data "oci_core_subnets" "private_mgmt" {
   compartment_id = local.values.compartments.production
   display_name   = "private-mgmt"
-  vcn_id         = data.oci_core_vcns.mgmt.virtual_networks[0].id
+  vcn_id         = data.oci_core_vcns.prod.virtual_networks[0].id
 }

@@ -1,23 +1,23 @@
 # Route Tables
-# resource "oci_core_route_table" "public_k8" {
+resource "oci_core_route_table" "public_k8" {
 
-#   compartment_id = local.values.compartments.production
-#   vcn_id         = oci_core_vcn.mgmt.id
+  compartment_id = local.values.compartments.production
+  vcn_id         = oci_core_vcn.prod.id
 
-#   display_name = "route-table-public-k8"
+  display_name = "route-table-public-k8"
 
-#   # Route to the Internet gateway
-#   route_rules {
+  # Route to the Internet gateway
+  route_rules {
 
-#     network_entity_id = oci_core_internet_gateway.mgmt.id
+    network_entity_id = oci_core_internet_gateway.prod.id
 
-#     description      = "Route to the Internet Gateway (Internet Access)"
-#     destination      = "0.0.0.0/0"
-#     destination_type = "CIDR_BLOCK"
-#   }
+    description      = "Route to the Internet Gateway (Internet Access)"
+    destination      = "0.0.0.0/0"
+    destination_type = "CIDR_BLOCK"
+  }
 
-#   freeform_tags = local.tags.defaults
-# }
+  freeform_tags = local.tags.defaults
+}
 
 resource "oci_core_route_table" "private_k8" {
 
