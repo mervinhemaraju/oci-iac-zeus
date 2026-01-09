@@ -4,7 +4,7 @@ resource "oci_containerengine_node_pool" "default-pool" {
   name               = "default-node-pool"
   node_shape         = local.values.compute.shape
   kubernetes_version = "v1.34.1"
-  ssh_public_key     = data.doppler_secrets.oci_creds.map.OCI_POSEIDON_COMPUTE_KEY_PUBLIC
+  ssh_public_key     = data.doppler_secrets.oci_creds.map.OCI_COMPUTE_KEY_PUBLIC
   #   subnet_ids          = var.node_pool_subnet_ids
 
 
