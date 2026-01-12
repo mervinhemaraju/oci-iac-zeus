@@ -14,13 +14,10 @@ resource "oci_core_vcn" "prod" {
   freeform_tags = local.tags.defaults
 }
 
-# > Attachment to the Database DRG in oci gaia account
-resource "oci_core_drg_attachment" "database_gaia" {
-
-  drg_id = local.networking.gateways.gaia_database_drg
-
-  display_name = "database-gaia-drg-attachment"
-
+# Attach ZEUS VCN to ZEUS's DRG (ONE VCN → ONE DRG)
+resource "oci_core_drg_attachment" "prod_vcn" {
+  drg_id        = oci_core_drg.prod.id
+  display_name  = "prod-vcn-drg-attachment"
   freeform_tags = local.tags.defaults
 
   network_details {
@@ -30,18 +27,46 @@ resource "oci_core_drg_attachment" "database_gaia" {
   }
 }
 
-# > Attachment to the Database DRG in oci poseidon account
-resource "oci_core_drg_attachment" "poseidon_mgmt" {
-
-  drg_id = oci_core_drg.prod.id
-
-  display_name = "poseidon-mgmt-drg-attachment"
-
+# Connect ZEUS DRG to GAIA DRG (DRG-to-DRG attachment, same region)
+resource "oci_core_drg_attachment" "gaia_drg" {
+  drg_id        = oci_core_drg.prod.id
+  display_name  = "gaia-drg-attachment"
   freeform_tags = local.tags.defaults
 
   network_details {
-    id             = oci_core_vcn.prod.id
-    type           = "VCN"
-    vcn_route_type = "SUBNET_CIDRS"
+    id   = local.networking.gateways.gaia_database_drg
+    type = "RPC" # Even though same region, this connects DRGs
   }
 }
+
+# # > Attachment to the Database DRG in oci gaia account
+# resource "oci_core_drg_attachment" "database_gaia" {
+
+#   drg_id = local.networking.gateways.gaia_database_drg
+
+#   display_name = "database-gaia-drg-attachment"
+
+#   freeform_tags = local.tags.defaults
+
+#   network_details {
+#     id             = oci_core_vcn.prod.id
+#     type           = "VCN"
+#     vcn_route_type = "SUBNET_CIDRS"
+#   }
+# }
+
+# # > Attachment to the Database DRG in oci poseidon account
+# resource "oci_core_drg_attachment" "poseidon_mgmt" {
+
+#   drg_id = oci_core_drg.prod.id
+
+#   display_name = "poseidon-mgmt-drg-attachment"
+
+#   freeform_tags = local.tags.defaults
+
+#   network_details {
+#     id             = oci_core_vcn.prod.id
+#     type           = "VCN"
+#     vcn_route_type = "SUBNET_CIDRS"
+#   }
+# }
