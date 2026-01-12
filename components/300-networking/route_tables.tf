@@ -46,6 +46,16 @@ resource "oci_core_route_table" "private_k8" {
     destination_type = "CIDR_BLOCK"
   }
 
+  # Route to the DRG gateway for OCI Poseidon connection
+  route_rules {
+
+    network_entity_id = oci_core_drg.prod.id
+
+    description      = "Route to the Poseidon K8 tenant's VCN (VCN Peering to POSEIDON Account)"
+    destination      = local.networking.cidr.subnets.private_k8_poseidon
+    destination_type = "CIDR_BLOCK"
+  }
+
   freeform_tags = local.tags.defaults
 }
 

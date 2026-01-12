@@ -39,7 +39,12 @@ locals {
         private_k8_api        = "10.17.30.0/28"
         private_k8            = "10.17.31.0/24"
         private_database_gaia = "10.18.20.0/24" # (This is found in the GAIA account)
+        private_k8_poseidon   = "10.15.20.0/24" # (This is found in the POSEIDON account)
       }
+    }
+
+    gateways = {
+      rpc_id_poseidon = jsondecode(data.doppler_secrets.oci_creds.map.OCI_POSEIDON_CONNECTIONS)["rpc"]["id"]
     }
   }
 }
