@@ -27,7 +27,7 @@ locals {
 
     gateways = {
       gaia_database_drg = jsondecode(data.doppler_secrets.oci_creds.map.OCI_GAIA_CONNECTIONS)["drg"]["id"]
-      rpc_id_poseidon   = jsondecode(data.doppler_secrets.oci_creds.map.OCI_POSEIDON_CONNECTIONS)["rpc"]["id"]
+      rpc_id_poseidon   = jsondecode(data.doppler_secrets.oci_creds.map.OCI_POSEIDON_CONNECTIONS)["rpc"]["zeus_prod_id"]
     }
 
     cidr = {
