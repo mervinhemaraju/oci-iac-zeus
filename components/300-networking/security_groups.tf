@@ -55,7 +55,7 @@ resource "oci_core_security_list" "private_k8" {
 
   # Allows all ingress traffic from the private db GAIA subnet
   ingress_security_rules {
-    source      = local.networking.cidr.subnets.private_db_gaia
+    source      = local.networking.cidr.subnets.private_database_gaia
     source_type = "CIDR_BLOCK"
     protocol    = "all"
 
