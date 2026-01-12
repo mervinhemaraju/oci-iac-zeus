@@ -35,7 +35,7 @@ resource "oci_core_drg_attachment" "gaia_drg" {
 
   network_details {
     id   = local.networking.gateways.gaia_database_drg
-    type = "RPC" # Even though same region, this connects DRGs
+    type = "REMOTE_PEERING_CONNECTION" # Even though same region, this connects DRGs
   }
 }
 
