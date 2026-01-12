@@ -12,6 +12,10 @@ locals {
     }
   }
 
+  secrets = {
+    oci = "cloud-oci-creds"
+  }
+
   values = {
     compartments = {
       production = data.doppler_secrets.oci_creds.map.OCI_ZEUS_COMPARTMENT_PRODUCTION_ID
@@ -19,7 +23,14 @@ locals {
     }
 
     groups = {
+      vcn_admins     = "vcn-admins"
       administrators = "Administrators"
+      gaia_groups = {
+        drg_admins = {
+          name = "drg-admins"
+          id   = jsondecode(data.doppler_secrets.oci_creds.map.OCI_GAIA_GROUPS)["drg-admins"]
+        }
+      }
 
       dynamic = {
         instance_principal = "instance-principal-group"

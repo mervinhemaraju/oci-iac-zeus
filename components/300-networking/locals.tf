@@ -25,6 +25,10 @@ locals {
 
   networking = {
 
+    gateways = {
+      gaia_database_drg = jsondecode(data.doppler_secrets.oci_creds.map.OCI_GAIA_CONNECTIONS)["drg"]["id"]
+    }
+
     cidr = {
       vcn = {
         prod = "10.17.0.0/16"

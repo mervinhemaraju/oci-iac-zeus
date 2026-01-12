@@ -8,9 +8,6 @@ resource "doppler_secret" "prod_connection_details" {
     {
       "drg" : {
         "id" : oci_core_drg.prod.id
-      },
-      "rpc" : {
-        "id" : oci_core_remote_peering_connection.prod.id
       }
     }
   )

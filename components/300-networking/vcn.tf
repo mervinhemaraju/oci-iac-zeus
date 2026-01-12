@@ -14,12 +14,12 @@ resource "oci_core_vcn" "prod" {
   freeform_tags = local.tags.defaults
 }
 
-# > The DRG attachment
-resource "oci_core_drg_attachment" "prod" {
+# > Attachment to the Database DRG in oci gaia account
+resource "oci_core_drg_attachment" "database_gaia" {
 
-  drg_id = oci_core_drg.prod.id
+  drg_id = local.networking.gateways.gaia_database_drg
 
-  display_name = "prod-drg-attachment"
+  display_name = "database-gaia-drg-attachment"
 
   freeform_tags = local.tags.defaults
 

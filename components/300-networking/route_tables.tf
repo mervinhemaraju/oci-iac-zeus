@@ -36,13 +36,13 @@ resource "oci_core_route_table" "private_k8" {
     destination_type = "CIDR_BLOCK"
   }
 
-  # Route to the DRG gateway for OCI GAIA connection
+  # Route to the DRG database gateway in GAIA for cross connection
   route_rules {
 
-    network_entity_id = oci_core_drg.prod.id
+    network_entity_id = local.networking.gateways.gaia_database_drg
 
-    description      = "Route to the GAIA database tenant's VCN (VCN Peering to GAIA Account)"
-    destination      = local.networking.cidr.subnets.private_db_gaia
+    description      = "Route to the GAIA Database account tenant's VCN (VCN Peering to GAIA Account)"
+    destination      = local.networking.cidr.subnets.private_database_gaia
     destination_type = "CIDR_BLOCK"
   }
 
