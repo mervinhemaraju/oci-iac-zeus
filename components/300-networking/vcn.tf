@@ -27,18 +27,6 @@ resource "oci_core_drg_attachment" "prod_vcn" {
   }
 }
 
-# Connect ZEUS DRG to GAIA DRG (DRG-to-DRG attachment, same region)
-resource "oci_core_drg_attachment" "gaia_drg" {
-  drg_id        = oci_core_drg.prod.id
-  display_name  = "gaia-drg-attachment"
-  freeform_tags = local.tags.defaults
-
-  network_details {
-    id   = local.networking.gateways.gaia_database_drg
-    type = "REMOTE_PEERING_CONNECTION" # Even though same region, this connects DRGs
-  }
-}
-
 # # > Attachment to the Database DRG in oci gaia account
 # resource "oci_core_drg_attachment" "database_gaia" {
 
