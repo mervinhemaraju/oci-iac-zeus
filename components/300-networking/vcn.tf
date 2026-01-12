@@ -29,3 +29,19 @@ resource "oci_core_drg_attachment" "database_gaia" {
     vcn_route_type = "SUBNET_CIDRS"
   }
 }
+
+# > Attachment to the Database DRG in oci poseidon account
+resource "oci_core_drg_attachment" "poseidon_mgmt" {
+
+  drg_id = oci_core_drg.prod.id
+
+  display_name = "poseidon-mgmt-drg-attachment"
+
+  freeform_tags = local.tags.defaults
+
+  network_details {
+    id             = oci_core_vcn.prod.id
+    type           = "VCN"
+    vcn_route_type = "SUBNET_CIDRS"
+  }
+}

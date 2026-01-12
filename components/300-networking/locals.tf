@@ -27,6 +27,7 @@ locals {
 
     gateways = {
       gaia_database_drg = jsondecode(data.doppler_secrets.oci_creds.map.OCI_GAIA_CONNECTIONS)["drg"]["id"]
+      rpc_id_poseidon   = jsondecode(data.doppler_secrets.oci_creds.map.OCI_POSEIDON_CONNECTIONS)["rpc"]["id"]
     }
 
     cidr = {
@@ -41,10 +42,6 @@ locals {
         private_database_gaia = "10.18.20.0/24" # (This is found in the GAIA account)
         private_k8_poseidon   = "10.15.20.0/24" # (This is found in the POSEIDON account)
       }
-    }
-
-    gateways = {
-      rpc_id_poseidon = jsondecode(data.doppler_secrets.oci_creds.map.OCI_POSEIDON_CONNECTIONS)["rpc"]["id"]
     }
   }
 }
