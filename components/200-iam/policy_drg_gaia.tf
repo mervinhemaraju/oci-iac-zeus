@@ -26,21 +26,20 @@ resource "oci_identity_policy" "gaia_database_drg_statements" {
     # "allow group ${oci_identity_group.vcn_admins.name} to manage local-peering-gateways in tenancy"
 
     # Definitions
-    "define group ${oci_identity_group.vcn_admins.name} as ${oci_identity_group.vcn_admins.id}",
-    "define group ${local.values.groups.gaia_groups.drg_admins.name} as ${local.values.groups.gaia_groups.drg_admins.id}",
+    "define group GaiaDrgAdmins as ${local.values.groups.gaia_groups.drg_admins.id}",
     "define tenancy gaiaTenancy as ${local.values.compartments.root_gaia}",
 
-    # --- ENDORSE (Local Zeus admins going to Gaia) ---
+    # 1. Endorse (Local Zeus admins going to Gaia)
+    # CHANGE: Replaced 'associate' with 'manage'
     "endorse group ${oci_identity_group.vcn_admins.name} to manage virtual-network-family in tenancy gaiaTenancy",
     "endorse group ${oci_identity_group.vcn_admins.name} to manage local-peering-to in tenancy gaiaTenancy",
-    "endorse group ${oci_identity_group.vcn_admins.name} to associate local-peering-gateways in tenancy gaiaTenancy",
     "endorse group ${oci_identity_group.vcn_admins.name} to manage drg in tenancy gaiaTenancy",
 
-    # --- ADMIT (Remote Gaia admins coming into Zeus) ---
-    # Used if Gaia admins need to manage the attachment on the Zeus side
-    "admit group ${local.values.groups.gaia_groups.drg_admins.name} of tenancy gaiaTenancy to manage drg-attachment in tenancy",
+    # 2. Admit (Remote Gaia admins coming into Zeus)
+    # This allows Gaia admins to manage DRG attachments in Zeus
+    "admit group GaiaDrgAdmins of tenancy gaiaTenancy to manage drg-attachment in tenancy",
 
-    # --- ALLOW (Local management) ---
+    # 3. Allow (Local Zeus admins managing Zeus resources)
     "allow group ${oci_identity_group.vcn_admins.name} to manage local-peering-gateways in tenancy"
   ]
 
