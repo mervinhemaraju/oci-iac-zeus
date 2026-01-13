@@ -16,11 +16,11 @@ resource "oci_identity_policy" "gaia_database_drg_statements" {
     "endorse group ${local.values.groups.gaia_groups.drg_admins.name} to manage virtual-network-family in tenancy gaiaTenancy",
     "endorse group ${oci_identity_group.vcn_admins.name} to manage virtual-network-family in tenancy gaiaTenancy",
     "endorse group ${oci_identity_group.vcn_admins.name} to manage local-peering-to in tenancy gaiaTenancy",
+    "endorse group ${oci_identity_group.vcn_admins.name} to associate local-peering-gateways in tenancy gaiaTenancy",
+    "endorse group ${oci_identity_group.vcn_admins.name} to manage drg in tenancy gaiaTenancy",
 
     # Admit
     "admit group ${local.values.groups.gaia_groups.drg_admins.name} of tenancy gaiaTenancy to manage drg-attachment in tenancy",
-    # Endorse
-    "endorse group ${oci_identity_group.vcn_admins.name} to manage drg in tenancy gaiaTenancy",
 
     # Allow
     "allow group ${oci_identity_group.vcn_admins.name} to manage local-peering-gateways in tenancy"
