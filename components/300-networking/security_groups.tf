@@ -71,6 +71,15 @@ resource "oci_core_security_list" "private_k8" {
     description = "Allow all traffic from the private-k8 POSEIDON subnet."
   }
 
+  # Allows all ingress traffic from the private k8 api POSEIDON subnet
+  ingress_security_rules {
+    source      = local.networking.cidr.subnets.private_k8_api_poseidon
+    source_type = "CIDR_BLOCK"
+    protocol    = "all"
+
+    description = "Allow all traffic from the private-k8-api POSEIDON subnet."
+  }
+
   # Allow all egress traffic to the internet
   egress_security_rules {
 

@@ -26,35 +26,3 @@ resource "oci_core_drg_attachment" "prod_vcn" {
     vcn_route_type = "SUBNET_CIDRS"
   }
 }
-
-# # > Attachment to the Database DRG in oci gaia account
-# resource "oci_core_drg_attachment" "database_gaia" {
-
-#   drg_id = local.networking.gateways.gaia_database_drg
-
-#   display_name = "database-gaia-drg-attachment"
-
-#   freeform_tags = local.tags.defaults
-
-#   network_details {
-#     id             = oci_core_vcn.prod.id
-#     type           = "VCN"
-#     vcn_route_type = "SUBNET_CIDRS"
-#   }
-# }
-
-# # > Attachment to the Database DRG in oci poseidon account
-# resource "oci_core_drg_attachment" "poseidon_mgmt" {
-
-#   drg_id = oci_core_drg.prod.id
-
-#   display_name = "poseidon-mgmt-drg-attachment"
-
-#   freeform_tags = local.tags.defaults
-
-#   network_details {
-#     id             = oci_core_vcn.prod.id
-#     type           = "VCN"
-#     vcn_route_type = "SUBNET_CIDRS"
-#   }
-# }
