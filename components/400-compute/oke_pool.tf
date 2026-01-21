@@ -26,18 +26,11 @@ resource "oci_containerengine_node_pool" "default_pool" {
     placement_configs {
       availability_domain = data.oci_identity_availability_domain.this.name
       subnet_id           = data.oci_core_subnets.private_k8.subnets[0].id
-
-      #   capacity_reservation_id = oci_containerengine_capacity_reservation.test_capacity_reservation.id
-      #   fault_domains           = var.node_pool_node_config_details_placement_configs_fault_domains
-
     }
 
     node_pool_pod_network_option_details {
       cni_type = "OCI_VCN_IP_NATIVE"
 
-      #Optional
-      # max_pods_per_node = var.node_pool_node_config_details_node_pool_pod_network_option_details_max_pods_per_node
-      # pod_nsg_ids       = var.node_pool_node_config_details_node_pool_pod_network_option_details_pod_nsg_ids
       pod_subnet_ids = data.oci_core_subnets.private_k8.subnets[*].id
     }
 
@@ -52,10 +45,8 @@ resource "oci_containerengine_node_pool" "default_pool" {
   node_pool_cycling_details {
     is_node_cycling_enabled = true
 
-    # Maximum surge during cycling - set to 0 to prevent exceeding 2 instances
     maximum_surge = "0"
 
-    # Maximum unavailable during cycling - set to 1 to ensure at least 1 instance remains
     maximum_unavailable = "1"
   }
 
@@ -65,7 +56,7 @@ resource "oci_containerengine_node_pool" "default_pool" {
   }
 
   node_source_details {
-    image_id                = local.values.compute.image_oke_node
+    image_id                = data.oci_containerengine_node_pool_option.arm_oke_ol.sources[0].image_id
     source_type             = "IMAGE"
     boot_volume_size_in_gbs = 50
   }
@@ -129,7 +120,7 @@ resource "oci_containerengine_node_pool" "large_pool" {
   }
 
   node_source_details {
-    image_id                = local.values.compute.image_oke_node
+    image_id                = data.oci_containerengine_node_pool_option.arm_oke_ol.sources[0].image_id
     source_type             = "IMAGE"
     boot_volume_size_in_gbs = 50
   }
